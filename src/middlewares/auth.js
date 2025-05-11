@@ -5,10 +5,11 @@ const auth=async(req,res,next)=>{
     try{
             const {token}=req.cookies;
             if(!token){
-                return res.status(401).send("Invalid Token!")
+                return res.status(401).send("Invalid Token! Please login again")
             }
             const decodedToken=await jwt.verify(token,"Harsh@2181$")
-            console.log(decode);
+            console.log(decodedToken)
+
             const {_id}=decodedToken;
             const user=await User.findById(_id);
             req.user={user,decodedToken};
@@ -27,7 +28,7 @@ const isStudent=(req,res,next)=>{
 
             const {token}=req.cookies;
         if(!token){
-                return res.status(401).send("Invalid Token!")
+                return res.status(401).send("Invalid Token! Please login again")
             }
         const {decodedToken}=req.user;
         if(decodedToken.role==="student"){
@@ -55,7 +56,7 @@ const isAdmin=(req,res,next)=>{
                 return res.status(401).send("Invalid Token!")
             }
         const {decodedToken}=req.user;
-        if(decodedToken.role==="student"){
+        if(decodedToken.role==="admin"){
             next();
         }
         else{
